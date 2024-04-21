@@ -1,43 +1,89 @@
+
+const gravity = 0.7
+// Get the canvas element and its 2D drawing context
 const canvas = document.querySelector('canvas');
-const c = canvas.getContext('2d'); // Get the 2D drawing context of the canvas element
+const c = canvas.getContext('2d');
 
-canvas.width = 1024; // Resize background window
-canvas.height = 576; // Resize background window
-c.fillStyle = 'black'; // Set fill color to black for background
-c.fillRect(0, 0, canvas.width, canvas.height); // Draw a filled rectangle to fill the canvas with black color.
 
+// Resize the canvas
+canvas.width = 1024;
+canvas.height = 576;
+
+// Set the background color to black
+c.fillStyle = 'black';
+c.fillRect(0, 0, canvas.width, canvas.height);
+
+// Define the Sprite class
 class Sprite {
-    constructor(position) { // The constructor is a special method in a class that is automatically called when a new instance of the class is created using the 'new' keyword.
-        // It initializes the object's properties or performs any setup necessary for the instance.        
-        this.position = position; // Property: Initializes and stores the sprite's position.
+    constructor({position, velocity}) { 
+        // Initialize sprite properties
+        this.position = position;
+        this.velocity = velocity;
+        this.height = 150;
     }
 
-    draw() { // Method: Draws the sprite on the canvas.
-        c.fillStyle = 'red'; // Set fill color to red.
-        c.fillRect(this.position.x, this.position.y, 50, 150); // Draw a filled rectangle at the sprite's position with a width of 50 and height of 150.
+    // Method to draw the sprite
+    draw() { 
+        // Set fill color to red
+        c.fillStyle = 'red'; 
+        // Draw a filled rectangle at the sprite's position
+        c.fillRect(this.position.x, this.position.y, 50, 150); 
     }
+    
+    // Method to update the sprite's position
+    update() { 
+        // Draw the sprite
+        this.draw();
+        
+        // Move the sprite downwards
+        this.position.y += this.velocity.y
+        // Check if the sprite has reached the ground
+        if (this.position.y + this.height + this.velocity.y >= canvas.height) {
+            // Stop the sprite if it has reached the ground. If the netx iteration is possible.
+            this.velocity.y = 0 ;
+        }
+        else{
+            //Change velocity to mimic gravity
+        this.velocity.y += gravity
+        }
+    } 
 }
 
-const player = new Sprite ({ //initial properties of player
-        x: 0, 
+// Create a player sprite
+const player = new Sprite ({ 
+    position: {
+        x: 0,
         y: 0
+    },
+    velocity: {
+        x: 0,
+        y: 0
+    }
 });
 
-
-const enemy = new Sprite ({ //initial properties of enemy 
-        x: 400, 
+// Create an enemy sprite
+const enemy = new Sprite ({ 
+    position: {
+        x: 500,
         y: 100
+    },
+    velocity: {
+        x: 0,
+        y: 0
+    }
 });
 
+// Animation loop function
 function animate() { 
-    // The purpose of this function is to create an animation loop so that we can animate our objects frame by frame.
-    // The window.requestAnimationFrame() method is used to tell the browser that you wish to perform an animation and requests that the browser calls a specified function to update an animation before the next repaint. 
-    // In this case, the specified function is 'animate' itself, creating a continuous loop where 'animate' is called repeatedly, allowing for smooth animation.
-    // Inside the function, we're logging 'hey' to the console, which serves as a visual cue that the animation loop is running.
-    window.requestAnimationFrame(animate); // Request the next animation frame
-    console.log('hey'); // Log a message to the console
+    // Request the next animation frame
+    window.requestAnimationFrame(animate);
+    // Clear the canvas
+    c.fillStyle = 'black';
+    c.fillRect(0, 0, canvas.width, canvas.height);
+    // Update the player and enemy sprites
+    player.update();
+    enemy.update();
 }
 
-player.draw();
-enemy.draw();
-console.log(player);
+// Start the animation loop
+animate();
