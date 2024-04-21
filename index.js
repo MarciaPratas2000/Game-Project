@@ -34,7 +34,8 @@ class Sprite {
     update() { 
         // Draw the sprite
         this.draw();
-        
+        // Move the sprite sidewars
+        this.position.x += this.velocity.x
         // Move the sprite downwards
         this.position.y += this.velocity.y
         // Check if the sprite has reached the ground
@@ -84,6 +85,37 @@ function animate() {
     player.update();
     enemy.update();
 }
+
+function handleKeyDown(event) {
+    // Use a switch statement to handle different key presses
+    switch (event.key) {
+        case 'd':
+            // If the 'd' key is pressed, set player velocity to 1 in the x direction
+            player.velocity.x = 1;
+            console.log(event.key);
+            break; // Don't forget to break after each case
+        // Add more cases for other keys if needed
+    }
+}
+// Add an event listener to the window object for keydown events
+// Note: 'keydown' event occurs when a key is pressed down
+window.addEventListener('keydown', handleKeyDown);
+
+function handleKeyUp(event) {
+    // Use a switch statement to handle different key presses
+    switch (event.key) {
+        case 'd':
+            // If the 'd' key is pressed, set player velocity to 0 in the x direction
+            player.velocity.x = 0;
+            console.log(event.key);
+            break; // Don't forget to break after each case
+        // Add more cases for other keys if needed
+    }
+}
+
+// Add an event listener to the window object for keydown events
+// Note: 'keyup' event occurs when a key is released
+window.addEventListener('keyup', handleKeyUp);
 
 // Start the animation loop
 animate();
