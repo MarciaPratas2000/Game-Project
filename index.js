@@ -14,21 +14,31 @@ c.fillStyle = 'black';
 c.fillRect(0, 0, canvas.width, canvas.height);
 
 class Sprite {
-    constructor({ position, velocity }) {
+    constructor({ position, velocity, color='red' }) {
         // Initialize sprite properties
         this.position = position;
         this.velocity = velocity;
         this.height = 150;
         this.width = 50;
         this.lastKey;
+        //its an object, a rectangle, and it has properties.
+        this.attackBox = {
+            position: this.position,
+            width:100,
+            height:50 
+        }
+        this.color=color; 
     }
-
     // Method to draw the sprite
     draw() {
         // Set fill color to red
-        c.fillStyle = 'red';
+        c.fillStyle = this.color;
         // Draw a filled rectangle at the sprite's position
         c.fillRect(this.position.x, this.position.y, this.width, this.height);
+        //Draw attackBox
+        c.fillStyle = 'yellow';
+        c.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width, this.attackBox.height);
+
     }
 
 
@@ -97,7 +107,8 @@ const enemy = new Sprite ({
     velocity: {
         x: 0,
         y: 0
-    }
+    },
+    color:'blue'
 });
 
 const keys = {
@@ -191,7 +202,7 @@ function animate() {
      player.update();
      enemy.update();
      player.velocity.x = 0;
-     enemy.velocity.x=0;
+     enemy.velocity.x = 0;
 
     if (keys.d.pressed && player.lastKey ==='d') {
         player.velocity.x = 5;
@@ -204,6 +215,19 @@ function animate() {
     } else if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
         enemy.velocity.x = -5;
     }
+
+    //detect for collision
+    if (
+      // Check if the right side of the player's attack box is past or touching the left side of the enemy
+      player.attackBox.position.x + player.attackBox.width >= enemy.position.x &&
+      // Check if the left side of the player's attack box is before or touching the right side of the enemy
+      player.attackBox.position.x <= enemy.position.x + enemy.width &&
+      // Check if the bottom side of the player's attack box is past or touching the top side of the enemy
+      player.attackBox.position.y + player.attackBox.height >= enemy.position.y &&
+      // Check if the top side of the player's attack box is before or touching the bottom side of the enemy
+      player.attackBox.position.y <= enemy.position.y + enemy.height)
+       {console.log('collision')
+       console.log(player.attackBox.position.y)}
 }
 
 // Add event listeners for keydown and keyup events
