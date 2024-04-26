@@ -28,6 +28,8 @@ class Sprite {
             height:50 
         }
         this.color=color; 
+        //by Default is false - tells if sprite is attacking
+        this.isAttacking; 
     }
     // Method to draw the sprite
     draw() {
@@ -72,6 +74,24 @@ class Sprite {
        }
        
    }
+   // Method to activate attack
+   attack() {
+    // Set isAttacking to true when attacking
+    this.isAttacking = true; 
+    // Define handleAttackTime as an arrow function to preserve `this` context
+    const handleAttackTime = () => {
+        this.isAttacking = false; // Reset isAttacking to false after timeout
+    };
+    // Set a timeout to execute handleAttackTime after 100 milliseconds
+    setTimeout(handleAttackTime, 100);
+}
+//Note:
+// Arrow Functions: Arrow functions do not have their own 'this' context. 
+// Instead, they inherit the this value from their enclosing lexical scope (the context in which they are defined). 
+// This behavior is particularly useful for maintaining the context of this in nested functions or when using callbacks.
+// Normal Functions: Normal functions have their own 'this' context, which is determined by how the function is called. 
+// The value of this inside a normal function depends on the function's invocation context (e.g., if it's a method of an object, a standalone function call, etc.).
+
 
     // Method to update the sprite's position
     update() {
@@ -225,7 +245,8 @@ function animate() {
       // Check if the bottom side of the player's attack box is past or touching the top side of the enemy
       player.attackBox.position.y + player.attackBox.height >= enemy.position.y &&
       // Check if the top side of the player's attack box is before or touching the bottom side of the enemy
-      player.attackBox.position.y <= enemy.position.y + enemy.height)
+      player.attackBox.position.y <= enemy.position.y + enemy.height &&
+      player.isAttacking)
        {console.log('collision')
        console.log(player.attackBox.position.y)}
 }
