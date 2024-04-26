@@ -99,6 +99,16 @@ const enemy = new Sprite ({
     }
 });
 
+const keys = {
+    a: {
+        pressed: false
+    },
+    d: {
+        pressed: false
+    }
+};
+
+let lastKey;
 // Animation loop function
 function animate() { 
     // Request the next animation frame
@@ -109,7 +119,16 @@ function animate() {
     // Update the player and enemy sprites
     player.update();
     enemy.update();
+    player.velocity.x = 0;
+
+    if(keys.d.pressed && lastKey ==='d'){
+        player.velocity.x = 1;
+    }
+   else if(keys.a.pressed && lastKey ==='a'){
+        player.velocity.x = -1;
+    }
 }
+
 
 // Start the animation loop
 animate();
@@ -118,18 +137,19 @@ function handleKeyDown(event) {
     // Use a switch statement to handle different key presses
     switch (event.key) {
         case 'd':
-            // If the 'd' key is pressed, set player velocity to 1 in the right direction
-            player.velocity.x = 1;
+        // If the 'd' key is pressed, set player velocity to 1 in the right direction
+            keys.d.pressed=true;
+            lastKey = 'd';
             player.update();
-            console.log(event.key);
             break; // Don't forget to break after each case
         // Add more cases for other keys if needed
 
         case 'a':
             // If the 'a' key is pressed, set player velocity to 1 in the left direction
-            player.velocity.x = -1;
+            lastKey = 'a';
+            keys.a.pressed=true;
             player.update();
-            console.log(event.key);
+            ;
             break; 
     }
 }
@@ -142,13 +162,13 @@ function handleKeyUp(event) {
     switch (event.key) {
         case 'd':
             // If the 'd' key is pressed, set player velocity to 0 in the x direction
-            player.velocity.x = 0;
+            keys.d.pressed=false;
             console.log(event.key);
             break; // Don't forget to break after each case
         // Add more cases for other keys if needed
         case 'a':
             // If the 'a' key is pressed, set player velocity to 0 in the x direction
-            player.velocity.x = 0;
+            keys.a.pressed=false;
             console.log(event.key);
             break; 
     }
