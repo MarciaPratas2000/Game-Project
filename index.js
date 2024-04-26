@@ -13,41 +13,66 @@ canvas.height = 576;
 c.fillStyle = 'black';
 c.fillRect(0, 0, canvas.width, canvas.height);
 
-// Define the Sprite class
 class Sprite {
-    constructor({position, velocity}) { 
+    constructor({ position, velocity }) {
         // Initialize sprite properties
         this.position = position;
         this.velocity = velocity;
         this.height = 150;
+        this.width = 50;
     }
 
     // Method to draw the sprite
-    draw() { 
+    draw() {
         // Set fill color to red
-        c.fillStyle = 'red'; 
+        c.fillStyle = 'red';
         // Draw a filled rectangle at the sprite's position
-        c.fillRect(this.position.x, this.position.y, 50, 150); 
+        c.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
-    
+
+
+    handleGravity()  {
+        // Move the sprite downwards
+        this.position.y += this.velocity.y;
+        if (this.position.y + this.height + this.velocity.y >= canvas.height) {
+        // Handle sprite reaching the ground
+        console.log("Sprite reached the ground");
+        this.velocity.y = 0;
+    } else {
+        // Apply gravity to mimic sprite falling
+        this.velocity.y += gravity;
+    }
+}
+    handleHorizontalMovement() {
+        // Move the sprite sideways based on its velocity
+            // Check if the sprite has reached or exceeded the canvas width (right side)
+        if (this.position.x + this.width + this.velocity.x >= canvas.width) {
+           this.velocity.x = 0;
+           console.log("Right limit reached");
+
+       }
+
+        // Check if the sprite has reached or exceeded the canvas width (right side)
+       else if (this.position.x + this.velocity.x <=0 ) {
+           this.velocity.x = 0;
+           console.log("Left limit reached");
+       }
+       else{        this.position.x += this.velocity.x;
+       }
+       
+   }
+
     // Method to update the sprite's position
-    update() { 
+    update() {
         // Draw the sprite
         this.draw();
-        // Move the sprite sidewars
-        this.position.x += this.velocity.x
-        // Move the sprite downwards
-        this.position.y += this.velocity.y
-        // Check if the sprite has reached the ground
-        if (this.position.y + this.height + this.velocity.y >= canvas.height) {
-            // Stop the sprite if it has reached the ground. If the netx iteration is possible.
-            this.velocity.y = 0 ;
-        }
-        else{
-            //Change velocity to mimic gravity
-        this.velocity.y += gravity
-        }
-    } 
+
+        // Handle gravity
+        this.handleGravity();
+
+        // Handle horizontal movement and canvas bounds
+        this.handleHorizontalMovement();
+    }
 }
 
 // Create a player sprite
@@ -86,15 +111,26 @@ function animate() {
     enemy.update();
 }
 
+// Start the animation loop
+animate();
+
 function handleKeyDown(event) {
     // Use a switch statement to handle different key presses
     switch (event.key) {
         case 'd':
-            // If the 'd' key is pressed, set player velocity to 1 in the x direction
+            // If the 'd' key is pressed, set player velocity to 1 in the right direction
             player.velocity.x = 1;
+            player.update();
             console.log(event.key);
             break; // Don't forget to break after each case
         // Add more cases for other keys if needed
+
+        case 'a':
+            // If the 'a' key is pressed, set player velocity to 1 in the left direction
+            player.velocity.x = -1;
+            player.update();
+            console.log(event.key);
+            break; 
     }
 }
 // Add an event listener to the window object for keydown events
@@ -110,6 +146,11 @@ function handleKeyUp(event) {
             console.log(event.key);
             break; // Don't forget to break after each case
         // Add more cases for other keys if needed
+        case 'a':
+            // If the 'a' key is pressed, set player velocity to 0 in the x direction
+            player.velocity.x = 0;
+            console.log(event.key);
+            break; 
     }
 }
 
@@ -117,5 +158,3 @@ function handleKeyUp(event) {
 // Note: 'keyup' event occurs when a key is released
 window.addEventListener('keyup', handleKeyUp);
 
-// Start the animation loop
-animate();
