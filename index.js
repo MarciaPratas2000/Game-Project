@@ -20,6 +20,7 @@ class Sprite {
         this.velocity = velocity;
         this.height = 150;
         this.width = 50;
+        this.lastKey;
     }
 
     // Method to draw the sprite
@@ -57,7 +58,7 @@ class Sprite {
            this.velocity.x = 0;
            console.log("Left limit reached");
        }
-       else{        this.position.x += this.velocity.x;
+       else{  this.position.x += this.velocity.x;
        }
        
    }
@@ -108,24 +109,46 @@ const keys = {
     },
     w: {
         pressed: false
-    }
-
+    },
+    ArrowUp: {
+        pressed: false
+    },
+    ArrowRight: {
+        pressed: false
+      },
+    ArrowLeft: {
+        pressed: false
+      }
 }
 
-let lastKey;
 function handleKeyDown(event) {
     switch (event.key) {
+        //player movements
         case 'd':
             keys.d.pressed = true;
-            lastKey = 'd';
+            player.lastKey = 'd';
             break;
         case 'a':
             keys.a.pressed = true;
-            lastKey = 'a';
+            player.lastKey = 'a';
             break;
         case 'w':
             keys.w.pressed = true;
             player.velocity.y = -10;
+        break;  
+        //enemy movements  
+        case 'ArrowRight':
+            keys.ArrowRight.pressed = true;
+            enemy.lastKey = 'ArrowRight';
+            break;
+        case 'ArrowLeft':
+            keys.ArrowLeft.pressed = true;
+            enemy.lastKey = 'ArrowLeft';
+            break;
+      
+        case 'ArrowUp':
+            keys.ArrowUp.pressed = true;
+            enemy.velocity.y = -10;
             break;
     }
 }
@@ -142,8 +165,20 @@ function handleKeyUp(event) {
         case 'w':
             keys.w.pressed = false;
             break;
+
+        case 'ArrowRight':
+            keys.ArrowRight.pressed = false;
+            break;
+        case 'ArrowLeft':
+            keys.ArrowLeft.pressed = false;
+            break;
+        
+        case 'ArrowUp':
+            keys.ArrowUp.pressed = false;
+            break;
+        }
     }
-}
+
 
 function animate() {
     window.requestAnimationFrame(animate);
@@ -151,22 +186,25 @@ function animate() {
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Update player velocity based on keys
-     // Update player position based on velocity
+    // Update player and enemy velocity based on keys
+     // Update player and enemy position based on velocity
      player.update();
      enemy.update();
      player.velocity.x = 0;
+     enemy.velocity.x=0;
 
-    if (keys.d.pressed) {
+    if (keys.d.pressed && player.lastKey ==='d') {
         player.velocity.x = 1;
-    } else if (keys.a.pressed) {
+    } else if (keys.a.pressed && player.lastKey ==='a') {
         player.velocity.x = -1;
     }
 
-    // Handle jumping (w key)
-    else if (keys.w.pressed) {
-        player.velocity.y = -10; // Adjust the value for upward movement
+    if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
+        enemy.velocity.x = 1;
+    } else if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
+        enemy.velocity.x = -1;
     }
+    
 }
 
 // Add event listeners for keydown and keyup events
