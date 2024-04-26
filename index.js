@@ -134,7 +134,7 @@ function handleKeyDown(event) {
             break;
         case 'w':
             keys.w.pressed = true;
-            player.velocity.y = -10;
+            player.velocity.y = -20;
         break;  
         //enemy movements  
         case 'ArrowRight':
@@ -148,7 +148,7 @@ function handleKeyDown(event) {
       
         case 'ArrowUp':
             keys.ArrowUp.pressed = true;
-            enemy.velocity.y = -10;
+            enemy.velocity.y = -20;
             break;
     }
 }
@@ -194,17 +194,16 @@ function animate() {
      enemy.velocity.x=0;
 
     if (keys.d.pressed && player.lastKey ==='d') {
-        player.velocity.x = 1;
+        player.velocity.x = 5;
     } else if (keys.a.pressed && player.lastKey ==='a') {
-        player.velocity.x = -1;
+        player.velocity.x = -5;
     }
 
     if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
-        enemy.velocity.x = 1;
+        enemy.velocity.x = 5;
     } else if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
-        enemy.velocity.x = -1;
+        enemy.velocity.x = -5;
     }
-    
 }
 
 // Add event listeners for keydown and keyup events
