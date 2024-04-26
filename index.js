@@ -105,76 +105,73 @@ const keys = {
     },
     d: {
         pressed: false
+    },
+    w: {
+        pressed: false
     }
-};
+
+}
 
 let lastKey;
-// Animation loop function
-function animate() { 
-    // Request the next animation frame
+function handleKeyDown(event) {
+    switch (event.key) {
+        case 'd':
+            keys.d.pressed = true;
+            lastKey = 'd';
+            break;
+        case 'a':
+            keys.a.pressed = true;
+            lastKey = 'a';
+            break;
+        case 'w':
+            keys.w.pressed = true;
+            player.velocity.y = -10;
+            break;
+    }
+}
+
+function handleKeyUp(event) {
+    switch (event.key) {
+        case 'd':
+            keys.d.pressed = false;
+            break;
+        case 'a':
+            keys.a.pressed = false;
+            break;
+
+        case 'w':
+            keys.w.pressed = false;
+            break;
+    }
+}
+
+function animate() {
     window.requestAnimationFrame(animate);
     // Clear the canvas
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height);
-    // Update the player and enemy sprites
-    player.update();
-    enemy.update();
-    player.velocity.x = 0;
 
-    if(keys.d.pressed && lastKey ==='d'){
+    // Update player velocity based on keys
+     // Update player position based on velocity
+     player.update();
+     enemy.update();
+     player.velocity.x = 0;
+
+    if (keys.d.pressed) {
         player.velocity.x = 1;
-    }
-   else if(keys.a.pressed && lastKey ==='a'){
+    } else if (keys.a.pressed) {
         player.velocity.x = -1;
+    }
+
+    // Handle jumping (w key)
+    else if (keys.w.pressed) {
+        player.velocity.y = -10; // Adjust the value for upward movement
     }
 }
 
+// Add event listeners for keydown and keyup events
+window.addEventListener('keydown', handleKeyDown);
+window.addEventListener('keyup', handleKeyUp);
 
 // Start the animation loop
 animate();
-
-function handleKeyDown(event) {
-    // Use a switch statement to handle different key presses
-    switch (event.key) {
-        case 'd':
-        // If the 'd' key is pressed, set player velocity to 1 in the right direction
-            keys.d.pressed=true;
-            lastKey = 'd';
-            player.update();
-            break; // Don't forget to break after each case
-        // Add more cases for other keys if needed
-
-        case 'a':
-            // If the 'a' key is pressed, set player velocity to 1 in the left direction
-            lastKey = 'a';
-            keys.a.pressed=true;
-            player.update();
-            ;
-            break; 
-    }
-}
-// Add an event listener to the window object for keydown events
-// Note: 'keydown' event occurs when a key is pressed down
-window.addEventListener('keydown', handleKeyDown);
-
-function handleKeyUp(event) {
-    // Use a switch statement to handle different key presses
-    switch (event.key) {
-        case 'd':
-            // If the 'd' key is pressed, set player velocity to 0 in the x direction
-            keys.d.pressed=false;
-            console.log(event.key);
-            break; // Don't forget to break after each case
-        // Add more cases for other keys if needed
-        case 'a':
-            // If the 'a' key is pressed, set player velocity to 0 in the x direction
-            keys.a.pressed=false;
-            console.log(event.key);
-            break; 
-    }
-}
-
-// Add an event listener to the window object for keydown events
-// Note: 'keyup' event occurs when a key is released
-window.addEventListener('keyup', handleKeyUp);
-
