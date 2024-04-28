@@ -49,7 +49,7 @@ class Sprite {
         this.position.y += this.velocity.y;
         if (this.position.y + this.height + this.velocity.y >= canvas.height) {
         // Handle sprite reaching the ground
-        console.log("Sprite reached the ground");
+        //console.log("Sprite reached the ground");
         this.velocity.y = 0;
     } else {
         // Apply gravity to mimic sprite falling
@@ -61,14 +61,14 @@ class Sprite {
             // Check if the sprite has reached or exceeded the canvas width (right side)
         if (this.position.x + this.width + this.velocity.x >= canvas.width) {
            this.velocity.x = 0;
-           console.log("Right limit reached");
+           //console.log("Right limit reached");
 
        }
 
         // Check if the sprite has reached or exceeded the canvas width (right side)
        else if (this.position.x + this.velocity.x <=0 ) {
            this.velocity.x = 0;
-           console.log("Left limit reached");
+           //console.log("Left limit reached");
        }
        else{  this.position.x += this.velocity.x;
        }
@@ -87,22 +87,22 @@ class Sprite {
 }
 //Note:
 // Arrow Functions: Arrow functions do not have their own 'this' context. 
-// Instead, they inherit the this value from their enclosing lexical scope (the context in which they are defined). 
+// Instead, they inherit the 'this' value from their enclosing lexical scope (the context in which they are defined). 
 // This behavior is particularly useful for maintaining the context of this in nested functions or when using callbacks.
 // Normal Functions: Normal functions have their own 'this' context, which is determined by how the function is called. 
-// The value of this inside a normal function depends on the function's invocation context (e.g., if it's a method of an object, a standalone function call, etc.).
+// The value of 'this' inside a normal function depends on the function's invocation context (e.g., if it's a method of an object, a standalone function call, etc.).
 
 
     // Method to update the sprite's position
     update() {
         // Draw the sprite
         this.draw();
-
         // Handle gravity
         this.handleGravity();
-
         // Handle horizontal movement and canvas bounds
         this.handleHorizontalMovement();
+        //activate attack
+        this.attack();
     }
 }
 
@@ -238,17 +238,23 @@ function animate() {
 
     //detect for collision
     if (
+       // Horizontal overlap check
       // Check if the right side of the player's attack box is past or touching the left side of the enemy
-      player.attackBox.position.x + player.attackBox.width >= enemy.position.x &&
+     ( player.attackBox.position.x + player.attackBox.width >= enemy.position.x &&
       // Check if the left side of the player's attack box is before or touching the right side of the enemy
-      player.attackBox.position.x <= enemy.position.x + enemy.width &&
+     player.attackBox.position.x <= enemy.position.x + enemy.width) &&  
+     // Vertical overlap check
       // Check if the bottom side of the player's attack box is past or touching the top side of the enemy
-      player.attackBox.position.y + player.attackBox.height >= enemy.position.y &&
+      (player.attackBox.position.y + player.attackBox.height >= enemy.position.y &&
       // Check if the top side of the player's attack box is before or touching the bottom side of the enemy
-      player.attackBox.position.y <= enemy.position.y + enemy.height &&
-      player.isAttacking)
-       {console.log('collision')
-       console.log(player.attackBox.position.y)}
+     player.attackBox.position.y <= enemy.position.y + enemy.height  )
+     && player.isAttacking)
+
+       {  // Collision detected
+        console.log('Collision detected');
+        console.log(`Player attack box position Y: ${player.attackBox.position.y}`);
+        //alert('Collision detected!'); // Display alert dialog
+        }
 }
 
 // Add event listeners for keydown and keyup events
