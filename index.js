@@ -199,7 +199,7 @@ function handleKeyDown(event) {
             keys.ArrowUp.pressed = true;
             enemy.velocity.y = -20;
             break;
-        case 'l':
+        case 'ArrowDown':
             enemy.attack();
             break;
     }
@@ -230,8 +230,21 @@ function handleKeyUp(event) {
             break;
         }
     }
-
-
+function handleRectangleCollision(rectangle1, rectangle2) {
+    return (
+        // Horizontal overlap check
+        // Check if the right side of rectangle1's attack box is past or touching the left side of rectangle2
+        (rectangle1.attackBox.position.x + rectangle1.attackBox.width >= rectangle2.position.x &&
+            // Check if the left side of rectangle1's attack box is before or touching the right side of rectangle2
+            rectangle1.attackBox.position.x <= rectangle2.position.x + rectangle2.width) &&
+        // Vertical overlap check
+        // Check if the bottom side of rectangle1's attack box is past or touching the top side of rectangle2
+        (rectangle1.attackBox.position.y + rectangle1.attackBox.height >= rectangle2.position.y &&
+            // Check if the top side of rectangle1's attack box is before or touching the bottom side of rectangle2
+            rectangle1.attackBox.position.y <= rectangle2.position.y + rectangle2.height)
+    );
+}
+    
 function animate() {
     window.requestAnimationFrame(animate);
     // Clear the canvas
@@ -258,27 +271,22 @@ function animate() {
     }
 
     //detect for collision
-    if (
-       // Horizontal overlap check
-      // Check if the right side of the player's attack box is past or touching the left side of the enemy
-     ( player.attackBox.position.x + player.attackBox.width >= enemy.position.x &&
-      // Check if the left side of the player's attack box is before or touching the right side of the enemy
-     player.attackBox.position.x <= enemy.position.x + enemy.width) &&  
-     // Vertical overlap check
-      // Check if the bottom side of the player's attack box is past or touching the top side of the enemy
-      (player.attackBox.position.y + player.attackBox.height >= enemy.position.y &&
-      // Check if the top side of the player's attack box is before or touching the bottom side of the enemy
-     player.attackBox.position.y <= enemy.position.y + enemy.height  )
-     && player.isAttacking)
-    // Collision detected
+    if (handleRectangleCollision(player,enemy) && player.isAttacking)
        {  
     // The variable player.isAttacking is immediately set to false to prevent counting 
     //any additional attacks triggered by the space bar during the next 100 milliseconds.
-        player.isAttacking = false
-        console.log('Attack detected');
-        //alert('Collision detected!'); // Display alert dialog
+        player.isAttacking = false;
+        console.log('Player Attack ');
         }
-}
+
+    if (handleRectangleCollision(enemy,player) && enemy.isAttacking)
+        {  
+            enemy.isAttacking = false;
+            console.log('Enemy Attack ');
+            }
+     }
+
+
 
 // Add event listeners for keydown and keyup events
 window.addEventListener('keydown', handleKeyDown);
