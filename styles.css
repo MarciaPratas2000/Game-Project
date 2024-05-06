@@ -1,0 +1,57 @@
+body {
+    font-family:'Times New Roman', Times, serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+.container{
+    position: relative;
+    box-sizing: border-box;
+    margin: 8px;
+}
+
+h1{position: relative;
+text-align: center;
+font-size: 20px;
+margin-top: 10px;}
+
+section{
+display:flex ;
+width: 100%;
+position: absolute;
+justify-content: space-around;
+border:dotted 1px blueviolet;
+align-items: center;
+
+}
+
+.health-bar {
+    width: 800px;
+    height: 40px;
+    border: 2px solid #333;
+    margin: 2px;
+    border-radius: 10px;
+
+}
+.score{
+    width: 10%;
+    height: 60px;
+    border-radius: 5px;
+    background-color: rgb(237, 242, 240);
+}
+.bar-fill {
+    height: 100%;
+    background-color: rgb(236, 131, 95);
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+/* Customize player 2 health bar fill */
+#enemy-health-fill {
+    background-color: rgb(102, 96, 255);
+}

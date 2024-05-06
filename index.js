@@ -277,6 +277,8 @@ function animate() {
     //any additional attacks triggered by the space bar during the next 100 milliseconds.
         player.isAttacking = false;
         console.log('Player Attack ');
+        document.querySelector('#enemy-health-bar').style.width='20%';
+
         }
 
     if (handleRectangleCollision(enemy,player) && enemy.isAttacking)
