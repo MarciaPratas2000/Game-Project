@@ -8,22 +8,26 @@ const c = canvas.getContext('2d');
 // Resize the canvas
 canvas.width = 1024;
 canvas.height = 576;
-
 // Set the background color to black
 c.fillStyle = 'black';
 c.fillRect(0, 0, canvas.width, canvas.height);
 
 class Sprite {
-    constructor({ position, velocity, color='red' }) {
+    constructor({ position, velocity, color='red' , offset}) {
         // Initialize sprite properties
         this.position = position;
         this.velocity = velocity;
         this.height = 150;
         this.width = 50;
+       
         this.lastKey;
-        //its an object, a rectangle, and it has properties.
+        //its an object, a rectangle, and it has properties. The position in the constructor isnt dynamic -> update()
         this.attackBox = {
-            position: this.position,
+            position: {
+               x: this.position.x,
+               y: this.position.x
+            },
+            offset,
             width:100,
             height:50 
         }
@@ -37,9 +41,13 @@ class Sprite {
         c.fillStyle = this.color;
         // Draw a filled rectangle at the sprite's position
         c.fillRect(this.position.x, this.position.y, this.width, this.height);
+        if(this.isAttacking){
         //Draw attackBox
+        this.attackBox.position.x = this.position.x + this.attackBox.offset.x ;
+        this.attackBox.position.y = this.position.y;
         c.fillStyle = 'yellow';
         c.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width, this.attackBox.height);
+        }
 
     }
 
@@ -62,7 +70,6 @@ class Sprite {
         if (this.position.x + this.width + this.velocity.x >= canvas.width) {
            this.velocity.x = 0;
            //console.log("Right limit reached");
-
        }
 
         // Check if the sprite has reached or exceeded the canvas width (right side)
@@ -84,6 +91,7 @@ class Sprite {
     };
     // Set a timeout to execute handleAttackTime after 100 milliseconds
     setTimeout(handleAttackTime, 100);
+    
 }
 //Note:
 // Arrow Functions: Arrow functions do not have their own 'this' context. 
@@ -100,10 +108,8 @@ class Sprite {
         // Handle gravity
         this.handleGravity();
         // Handle horizontal movement and canvas bounds
-        this.handleHorizontalMovement();
-        //activate attack
-        this.attack();
-    }
+        this.handleHorizontalMovement();    
+    }     
 }
 
 // Create a player sprite
@@ -113,6 +119,10 @@ const player = new Sprite ({
         y: 0
     },
     velocity: {
+        x: 0,
+        y: 0
+    },
+    offset:{
         x: 0,
         y: 0
     }
@@ -126,6 +136,10 @@ const enemy = new Sprite ({
     },
     velocity: {
         x: 0,
+        y: 0
+    },
+    offset:{
+        x: -50,
         y: 0
     },
     color:'blue'
@@ -166,7 +180,11 @@ function handleKeyDown(event) {
         case 'w':
             keys.w.pressed = true;
             player.velocity.y = -20;
-        break;  
+        break; 
+        //space bar -activate attack
+        case ' ':
+            player.attack();
+            break;
         //enemy movements  
         case 'ArrowRight':
             keys.ArrowRight.pressed = true;
@@ -180,6 +198,9 @@ function handleKeyDown(event) {
         case 'ArrowUp':
             keys.ArrowUp.pressed = true;
             enemy.velocity.y = -20;
+            break;
+        case 'l':
+            enemy.attack();
             break;
     }
 }
@@ -249,10 +270,12 @@ function animate() {
       // Check if the top side of the player's attack box is before or touching the bottom side of the enemy
      player.attackBox.position.y <= enemy.position.y + enemy.height  )
      && player.isAttacking)
-
-       {  // Collision detected
-        console.log('Collision detected');
-        console.log(`Player attack box position Y: ${player.attackBox.position.y}`);
+    // Collision detected
+       {  
+    // The variable player.isAttacking is immediately set to false to prevent counting 
+    //any additional attacks triggered by the space bar during the next 100 milliseconds.
+        player.isAttacking = false
+        console.log('Attack detected');
         //alert('Collision detected!'); // Display alert dialog
         }
 }
