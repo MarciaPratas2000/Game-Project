@@ -106,28 +106,30 @@ class Sprite {
         this.handleHorizontalMovement();    
     }    
 
-    updateHeathBar() {
-    if (!this.healthBarElement) {
-        console.error('Health bar element not set. Use setHealthBarElement() to assign the element.');
-        return;
+    updateHealthBar( decreaseAmount) {
+        if (!this.healthBarElement) {
+            console.error('Health bar element not set. Use setHealthBarElement() to assign the element.');
+            return 0;
+        }
+        let computedStyle = window.getComputedStyle(this.healthBarElement);
+        let currentWidth = parseFloat(computedStyle.getPropertyValue('width'));
+        // Calculate the decrease amount in pixels from the right side of the health bar
+        let decreaseWidth = decreaseAmount * currentWidth;
+
+        //let newWidth = currentWidth - decreaseWidth;
+        let newWidth = currentWidth - decreaseWidth;
+
+        if (newWidth < 0) {
+            newWidth = 0;
+        }
+
+        this.healthBarElement.style.width = `${newWidth}px`;
+        console.log(`Health bar width updated to ${newWidth}px`);
+
     }
-
-    let computedStyle = window.getComputedStyle(this.healthBarElement);
-    let currentWidth = parseFloat(computedStyle.getPropertyValue('width'));
-
-    const decreaseAmount = 0.02; // 2% decrease in health bar width
-    let newWidth = currentWidth - (currentWidth * decreaseAmount);
-
-    if (newWidth < 0) {
-        newWidth = 0;
-    }
-
-    this.healthBarElement.style.width = `${newWidth}px`; // Update width with 'px' unit
-
-    console.log(`Health bar width updated to ${newWidth}px`);
 }
 
-}
+
 
 //Note:
 // Arrow Functions: Arrow functions do not have their own 'this' context. 
@@ -150,7 +152,7 @@ const player = new Sprite ({
     offset:{
         x: 0,
         y: 0
-    }
+    },
 });
 
 // Create an enemy sprite
@@ -305,24 +307,21 @@ function animate() {
      console.log('Player Attack ');
      //Get the enemy health bar element
      enemy.healthBarElement = document.querySelector('#enemy-health-fill');
-     // Get the computed style of the enemy health bar
-     enemy.updateHeathBar();
+     const decreaseAmount = 0.02; // 2% decrease in health bar width
+     enemy.updateHealthBar(decreaseAmount);
      }
-     
-     
+       
  }
  
-
  if (handleRectangleCollision(enemy,player) && enemy.isAttacking)
      {  
          enemy.isAttacking = false;
          console.log('Enemy Attack ');
-         player.healthBarElement = document.querySelector('#player-health-fill');
-         // Get the computed style of the enemy health bar
-         player.updateHeathBar();
-         }
+    player.healthBarElement = document.querySelector('#player-health-fill');
+    // Update the player's health bar (e.g., decrease by 20%)
+    const decreaseAmount = 0.02; // 20% decrease
+    player.updateHealthBar(decreaseAmount);        }
   }
-
 
         // Get the computed style of the enemy health bar
 window.addEventListener('keydown', handleKeyDown);

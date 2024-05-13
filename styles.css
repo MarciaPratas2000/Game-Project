@@ -27,6 +27,7 @@ justify-content: space-around;
 border:dotted 1px blueviolet;
 align-items: center;
 
+
 }
 
 .health-bar {
@@ -35,6 +36,7 @@ align-items: center;
     border: 2px solid #333;
     margin: 2px;
     border-radius: 10px;
+    position: relative;
 
 }
 .score{
@@ -43,13 +45,29 @@ align-items: center;
     border-radius: 5px;
     background-color: rgb(237, 242, 240);
 }
-.bar-fill {
+
+
+.bar-fill-reverse {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background-color: rgb(193, 145, 130);
     height: 100%;
-    background-color: rgb(236, 131, 95);
+    width: 100%;
+    right: 0;
+
+}
+
+.bar-fill {
+    position: relative;
+    left: 0;
+    height: 100%;
     width: 100%;
     top: 0;
-    left: 0;
+    bottom: 0;
 }
+
+
 
 /* Customize player 2 health bar fill */
 #enemy-health-fill {
