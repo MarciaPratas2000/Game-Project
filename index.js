@@ -271,15 +271,32 @@ function animate() {
     }
 
     //detect for collision
-    if (handleRectangleCollision(player,enemy) && player.isAttacking)
-       {  
-    // The variable player.isAttacking is immediately set to false to prevent counting 
-    //any additional attacks triggered by the space bar during the next 100 milliseconds.
+    if (handleRectangleCollision(player, enemy) && player.isAttacking) {
+        // Disable further attacks for 100 milliseconds
         player.isAttacking = false;
-        console.log('Player Attack ');
-        document.querySelector('#enemy-health-bar').style.width='20%';
-
-        }
+        
+        console.log('Player Attack');
+        
+        // Get the enemy health bar element
+        let enemyHealthBar = document.querySelector('#enemy-health-bar');
+        
+        // Get the computed style of the enemy health bar
+        let computedStyle = window.getComputedStyle(enemyHealthBar);
+        let currentWidth = computedStyle.getPropertyValue('width'); // Get width as a string (e.g., '200px')
+    
+        // Parse the current width string into a numeric value (remove 'px' or '%' suffix)
+        let numericWidth = parseFloat(currentWidth);
+    
+        // Decrease the width by 20% (change this to your desired percentage decrease)
+        const decreaseAmount = 0.02; // 20% represented as a decimal
+        let newWidth = numericWidth - (numericWidth * decreaseAmount);
+    
+        // Set the new width style for the health bar
+        enemyHealthBar.style.width = `${newWidth}px`; // Update width with 'px' unit
+    
+        console.log(`Enemy health bar width updated to ${newWidth}px`);
+    }
+    
 
     if (handleRectangleCollision(enemy,player) && enemy.isAttacking)
         {  
