@@ -34,6 +34,8 @@ class Sprite {
         this.color=color; 
         //by Default is false - tells if sprite is attacking
         this.isAttacking; 
+        this.healthBarElement = null;
+
     }
     // Method to draw the sprite
     draw() {
@@ -93,13 +95,6 @@ class Sprite {
     setTimeout(handleAttackTime, 100);
     
 }
-//Note:
-// Arrow Functions: Arrow functions do not have their own 'this' context. 
-// Instead, they inherit the 'this' value from their enclosing lexical scope (the context in which they are defined). 
-// This behavior is particularly useful for maintaining the context of this in nested functions or when using callbacks.
-// Normal Functions: Normal functions have their own 'this' context, which is determined by how the function is called. 
-// The value of 'this' inside a normal function depends on the function's invocation context (e.g., if it's a method of an object, a standalone function call, etc.).
-
 
     // Method to update the sprite's position
     update() {
@@ -109,9 +104,39 @@ class Sprite {
         this.handleGravity();
         // Handle horizontal movement and canvas bounds
         this.handleHorizontalMovement();    
-    }     
+    }    
+
+    updateHeathBar() {
+    if (!this.healthBarElement) {
+        console.error('Health bar element not set. Use setHealthBarElement() to assign the element.');
+        return;
+    }
+
+    let computedStyle = window.getComputedStyle(this.healthBarElement);
+    let currentWidth = parseFloat(computedStyle.getPropertyValue('width'));
+
+    const decreaseAmount = 0.02; // 2% decrease in health bar width
+    let newWidth = currentWidth - (currentWidth * decreaseAmount);
+
+    if (newWidth < 0) {
+        newWidth = 0;
+    }
+
+    this.healthBarElement.style.width = `${newWidth}px`; // Update width with 'px' unit
+
+    console.log(`Health bar width updated to ${newWidth}px`);
 }
 
+}
+
+//Note:
+// Arrow Functions: Arrow functions do not have their own 'this' context. 
+// Instead, they inherit the 'this' value from their enclosing lexical scope (the context in which they are defined). 
+// This behavior is particularly useful for maintaining the context of this in nested functions or when using callbacks.
+// Normal Functions: Normal functions have their own 'this' context, which is determined by how the function is called. 
+// The value of 'this' inside a normal function depends on the function's invocation context (e.g., if it's a method of an object, a standalone function call, etc.).
+
+ 
 // Create a player sprite
 const player = new Sprite ({ 
     position: {
@@ -269,45 +294,37 @@ function animate() {
     } else if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
         enemy.velocity.x = -5;
     }
-
-    //detect for collision
-    if (handleRectangleCollision(player, enemy) && player.isAttacking) {
-        // Disable further attacks for 100 milliseconds
-        player.isAttacking = false;
-        
-        console.log('Player Attack');
-        
-        // Get the enemy health bar element
-        let enemyHealthBar = document.querySelector('#enemy-health-bar');
-        
-        // Get the computed style of the enemy health bar
-        let computedStyle = window.getComputedStyle(enemyHealthBar);
-        let currentWidth = computedStyle.getPropertyValue('width'); // Get width as a string (e.g., '200px')
-    
-        // Parse the current width string into a numeric value (remove 'px' or '%' suffix)
-        let numericWidth = parseFloat(currentWidth);
-    
-        // Decrease the width by 20% (change this to your desired percentage decrease)
-        const decreaseAmount = 0.02; // 20% represented as a decimal
-        let newWidth = numericWidth - (numericWidth * decreaseAmount);
-    
-        // Set the new width style for the health bar
-        enemyHealthBar.style.width = `${newWidth}px`; // Update width with 'px' unit
-    
-        console.log(`Enemy health bar width updated to ${newWidth}px`);
-    }
-    
-
-    if (handleRectangleCollision(enemy,player) && enemy.isAttacking)
-        {  
-            enemy.isAttacking = false;
-            console.log('Enemy Attack ');
-            }
+   //detect for collision
+   if (handleRectangleCollision(player,enemy) && player.isAttacking)
+    {  
+ // The variable player.isAttacking is immediately set to false to prevent counting 
+ //any additional attacks triggered by the space bar during the next 100 milliseconds.
+ if (handleRectangleCollision(player, enemy) && player.isAttacking) {
+     // Disable further attacks for 100 milliseconds
+     player.isAttacking = false;
+     console.log('Player Attack ');
+     //Get the enemy health bar element
+     enemy.healthBarElement = document.querySelector('#enemy-health-fill');
+     // Get the computed style of the enemy health bar
+     enemy.updateHeathBar();
      }
+     
+     
+ }
+ 
+
+ if (handleRectangleCollision(enemy,player) && enemy.isAttacking)
+     {  
+         enemy.isAttacking = false;
+         console.log('Enemy Attack ');
+         player.healthBarElement = document.querySelector('#player-health-fill');
+         // Get the computed style of the enemy health bar
+         player.updateHeathBar();
+         }
+  }
 
 
-
-// Add event listeners for keydown and keyup events
+        // Get the computed style of the enemy health bar
 window.addEventListener('keydown', handleKeyDown);
 window.addEventListener('keyup', handleKeyUp);
 
