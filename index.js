@@ -1,4 +1,23 @@
 
+document.addEventListener('DOMContentLoaded', function() {
+    const gameTextButton = document.getElementById('gameText');
+    const gameInstructions = document.querySelector('.game-instructions');
+    const gameSection = document.querySelector('.game-section');
+
+    // Toggle game instructions visibility
+    gameTextButton.addEventListener('click', function() {
+        if (gameInstructions.style.display === 'none' || gameInstructions.style.display === '') {
+            gameSection.style.display = 'none';
+            gameInstructions.style.display = 'block';
+            gameTextButton.textContent = 'Go Back'; // Change button text
+        } else {
+            gameSection.style.display = 'block';
+            gameInstructions.style.display = 'none';
+            gameTextButton.textContent = 'Instructions!'; // Change button text back
+        }
+    });
+});
+
 const gravity = 0.7
 // Get the canvas element and its 2D drawing context
 const canvas = document.querySelector('canvas');
@@ -34,7 +53,7 @@ class Sprite {
         this.color=color; 
         //by Default is false - tells if sprite is attacking
         this.isAttacking; 
-        this.healthBarElement = null;
+        this.healthBarElement = 100;
 
     }
     // Method to draw the sprite
@@ -106,7 +125,8 @@ class Sprite {
         this.handleHorizontalMovement();    
     }    
 
-    updateHealthBar( decreaseAmount) {
+    updateHealthBar() {
+        const decreaseAmount = 0.02; // 2% decrease in health bar width
         if (!this.healthBarElement) {
             console.error('Health bar element not set. Use setHealthBarElement() to assign the element.');
             return 0;
@@ -115,7 +135,6 @@ class Sprite {
         let currentWidth = parseFloat(computedStyle.getPropertyValue('width'));
         // Calculate the decrease amount in pixels from the right side of the health bar
         let decreaseWidth = decreaseAmount * currentWidth;
-
         //let newWidth = currentWidth - decreaseWidth;
         let newWidth = currentWidth - decreaseWidth;
 
@@ -307,8 +326,7 @@ function animate() {
      console.log('Player Attack ');
      //Get the enemy health bar element
      enemy.healthBarElement = document.querySelector('#enemy-health-fill');
-     const decreaseAmount = 0.02; // 2% decrease in health bar width
-     enemy.updateHealthBar(decreaseAmount);
+     enemy.updateHealthBar();
      }
        
  }
@@ -319,9 +337,9 @@ function animate() {
          console.log('Enemy Attack ');
     player.healthBarElement = document.querySelector('#player-health-fill');
     // Update the player's health bar (e.g., decrease by 20%)
-    const decreaseAmount = 0.02; // 20% decrease
-    player.updateHealthBar(decreaseAmount);        }
+    player.updateHealthBar();        }
   }
+
 
         // Get the computed style of the enemy health bar
 window.addEventListener('keydown', handleKeyDown);
@@ -329,3 +347,4 @@ window.addEventListener('keyup', handleKeyUp);
 
 // Start the animation loop
 animate();
+

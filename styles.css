@@ -1,33 +1,38 @@
 body {
-    font-family:'Times New Roman', Times, serif;
+    font-family: 'Times New Roman', Times, serif;
+    height: 100vh;
+    margin: 0 10px;
+    background-color: #f0f0f0; 
+}
+
+.container {
+    position: relative;
+    margin: 10px;
+    box-sizing: border-box; 
+}
+
+.game-section h1 {
+    position: relative;
+    text-align: center;
+    font-size: 20px;
+}
+
+.game-section{
+    max-width: 1024px;
+    position: relative;
+    margin: 0 auto;
+
+}
+
+section {
     display: flex;
+    position: absolute;
+    right: 0;
+    left: 0;
+    width: 100%;
+    border: dotted 1px blueviolet;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
-    background-color: #f0f0f0;
-}
-
-.container{
-    position: relative;
-    box-sizing: border-box;
-    margin: 8px;
-}
-
-h1{position: relative;
-text-align: center;
-font-size: 20px;
-margin-top: 10px;}
-
-section{
-display:flex ;
-width: 100%;
-position: absolute;
-justify-content: space-around;
-border:dotted 1px blueviolet;
-align-items: center;
-
-
 }
 
 .health-bar {
@@ -37,29 +42,28 @@ align-items: center;
     margin: 2px;
     border-radius: 10px;
     position: relative;
-
+    background-color: white;
 }
-.score{
+
+.score {
     width: 10%;
     height: 60px;
     border-radius: 5px;
     background-color: rgb(237, 242, 240);
 }
 
-
 .bar-fill-reverse {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    background-color: rgb(193, 145, 130);
+    background-color: rgb(199, 75, 37);
     height: 100%;
     width: 100%;
     right: 0;
-
+    top: 0;
+    bottom: 0;
 }
 
 .bar-fill {
-    position: relative;
+    position: absolute;
     left: 0;
     height: 100%;
     width: 100%;
@@ -67,7 +71,68 @@ align-items: center;
     bottom: 0;
 }
 
+.game-text {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    display: block;
+}
 
+.game-instructions {
+    display: none;
+}
+
+.instructions {
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.instructions h1 {
+    color: #007bff;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.instructions h2 {
+    color: #ff5733; /* Red for Player 1 */
+    font-size: 20px;
+    margin-top: 30px;
+}
+
+.instructions ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.instructions ul li {
+    margin-bottom: 10px;
+}
+
+.instructions p {
+    margin-bottom: 15px;
+}
+
+.instructions strong {
+    font-weight: bold;
+}
+
+.instructions em {
+    font-style: italic;
+    color: #555;
+}
+
+.container .game-instructions {
+    position: absolute;
+    top: 10px;
+    display: none;
+}
 
 /* Customize player 2 health bar fill */
 #enemy-health-fill {
