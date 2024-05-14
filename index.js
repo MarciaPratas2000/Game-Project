@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
             gameTextButton.textContent = 'Instructions!'; // Change button text back
         }
     });
-});
 
 const gravity = 0.7
 // Get the canvas element and its 2D drawing context
@@ -347,4 +346,7 @@ window.addEventListener('keyup', handleKeyUp);
 
 // Start the animation loop
 animate();
+
+});
+
 
