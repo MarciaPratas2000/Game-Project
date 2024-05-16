@@ -305,7 +305,7 @@ function handleRectangleCollision(rectangle1, rectangle2) {
 
 let timerElement = document.querySelector('#timer');
 let resultElement = document.querySelector('#result');
-function determine ()
+function determine (player,enemy)
 {
     if (player.health === enemy.health) {
         resultElement.innerHTML = "Result: TIE";
@@ -324,7 +324,7 @@ function startTimer(seconds) {
             timerElement.innerHTML = timer;
             setTimeout(decreaseTime, 1000); // Call countdown again after 1 second
         } 
-        else { determine();
+        else { determine(player,enemy);
             // Timer reaches 0, determine the result based on health comparison
          
         }
@@ -333,7 +333,7 @@ function startTimer(seconds) {
     decreaseTime(); // Start the initial countdown
 }
 // Usage: Start the timer with 60 seconds (adjust as needed)
-startTimer(10);
+startTimer(30);
 
 function animate() {
     window.requestAnimationFrame(animate);
@@ -384,8 +384,8 @@ function animate() {
     player.updateHealthBar();        
 }
 
-if (player.health <= 0 || enemy.health <= 0 )
-    determine();
+if (player.health <= 1 || enemy.health <= 1 )
+    determine(player,enemy);
     }
 
 
