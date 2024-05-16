@@ -34,6 +34,19 @@ section {
     justify-content: center;
     align-items: center;
 }
+.result{
+    font-size: 70px;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: azure;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
 
 .health-bar {
     width: 80%;
@@ -45,11 +58,14 @@ section {
     background-color: white;
 }
 
-.score {
+.timer {
     width: 10%;
     height: 60px;
     border-radius: 5px;
     background-color: rgb(237, 242, 240);
+    display: flex ;
+    align-items: center; /*verticaly*/
+    justify-content:center; /*horizontaly*/
 }
 
 .bar-fill-reverse {

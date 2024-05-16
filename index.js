@@ -22,7 +22,6 @@ const gravity = 0.7
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 
-
 // Resize the canvas
 canvas.width = 1024;
 canvas.height = 576;
@@ -52,7 +51,8 @@ class Sprite {
         this.color=color; 
         //by Default is false - tells if sprite is attacking
         this.isAttacking; 
-        this.healthBarElement = 100;
+        this.health = 100;
+        this.healthBarElement;
 
     }
     // Method to draw the sprite
@@ -132,19 +132,32 @@ class Sprite {
         }
         let computedStyle = window.getComputedStyle(this.healthBarElement);
         let currentWidth = parseFloat(computedStyle.getPropertyValue('width'));
-        // Calculate the decrease amount in pixels from the right side of the health bar
+    
+        // Calculate the decrease amount in pixels
         let decreaseWidth = decreaseAmount * currentWidth;
-        //let newWidth = currentWidth - decreaseWidth;
         let newWidth = currentWidth - decreaseWidth;
-
+    
+        // Ensure the health bar width doesn't go below 0
         if (newWidth < 0) {
             newWidth = 0;
         }
-
+    
+        // Apply the updated width to the health bar element
         this.healthBarElement.style.width = `${newWidth}px`;
-        console.log(`Health bar width updated to ${newWidth}px`);
 
+        // Calculate the new health after applying the decrease amount
+        let newHealth = this.health - (this.health * decreaseAmount);
+        // Ensure the health doesn't go below 0
+        if (newHealth < 0) {
+            newHealth = 0;
+        }
+        // Update the health attribute
+        this.health = newHealth;
+
+    console.log(`Health bar width updated to ${newWidth}px`);
+    console.log(`Health bar width updated to ${this.health}%`);
     }
+    
 }
 
 
@@ -289,7 +302,39 @@ function handleRectangleCollision(rectangle1, rectangle2) {
             rectangle1.attackBox.position.y <= rectangle2.position.y + rectangle2.height)
     );
 }
-    
+
+let timerElement = document.querySelector('#timer');
+let resultElement = document.querySelector('#result');
+function determine ()
+{
+    if (player.health === enemy.health) {
+        resultElement.innerHTML = "Result: TIE";
+    } else if (player.health > enemy.health) {
+        resultElement.innerHTML = "Result: Player 1 wins";
+    } else {
+        resultElement.innerHTML = "Result: Player 2 wins";
+    }
+}
+// Start the timer countdown
+function startTimer(seconds) {
+    let timer = seconds;
+    function decreaseTime() {
+        if (timer > 0) {
+            timer--;
+            timerElement.innerHTML = timer;
+            setTimeout(decreaseTime, 1000); // Call countdown again after 1 second
+        } 
+        else { determine();
+            // Timer reaches 0, determine the result based on health comparison
+         
+        }
+    }
+
+    decreaseTime(); // Start the initial countdown
+}
+// Usage: Start the timer with 60 seconds (adjust as needed)
+startTimer(10);
+
 function animate() {
     window.requestAnimationFrame(animate);
     // Clear the canvas
@@ -336,8 +381,12 @@ function animate() {
          console.log('Enemy Attack ');
     player.healthBarElement = document.querySelector('#player-health-fill');
     // Update the player's health bar (e.g., decrease by 20%)
-    player.updateHealthBar();        }
-  }
+    player.updateHealthBar();        
+}
+
+if (player.health <= 0 || enemy.health <= 0 )
+    determine();
+    }
 
 
         // Get the computed style of the enemy health bar
