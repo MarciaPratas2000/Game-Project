@@ -5,10 +5,16 @@ body {
     background-color: #f0f0f0; 
 }
 
+canvas{
+border: 2px solid rgb(168, 156, 155);
+border-radius: 8px;
+}
+
 .container {
     position: relative;
     margin: 10px;
     box-sizing: border-box; 
+
 }
 
 .game-section h1 {
@@ -30,9 +36,9 @@ section {
     right: 0;
     left: 0;
     width: 100%;
-    border: dotted 1px blueviolet;
     justify-content: center;
     align-items: center;
+    margin-top: 10px;
 }
 .result{
     font-size: 70px;
@@ -49,18 +55,17 @@ section {
 }
 
 .health-bar {
-    width: 80%;
+    width: 100%;
     height: 40px;
     border: 2px solid #333;
-    margin: 2px;
     border-radius: 10px;
     position: relative;
     background-color: white;
 }
 
 .timer {
-    width: 10%;
-    height: 60px;
+    width: 15%;
+    height: 40px;
     border-radius: 5px;
     background-color: rgb(237, 242, 240);
     display: flex ;
