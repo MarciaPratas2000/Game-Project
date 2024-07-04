@@ -1,73 +1,84 @@
-// classes are in a separate file for maintainance purposes
+// Sprite class to manage sprite properties and behavior
 class Sprite {
-
-    constructor({ position , imageSrc}) {
+    constructor({ position, imageSrc, scale = 1, framesMax = 1 ,offset ={x:0,y:0}}) {
         // Initialize sprite properties
-        this.position= position;
-        this.height = 150;
-        this.width = 50;
-        this.image = new Image(); //native Api for image creation
-        this.image.src = imageSrc;
-       
+        this.position = position;             // Position of the sprite
+        this.height = 150;                    // Height of the sprite (arbitrary value)
+        this.width = 50;                      // Width of the sprite (arbitrary value)
+        this.image = new Image();             // Create a new Image object
+        this.image.src = imageSrc;            // Set the source of the image
+        this.scale = scale;                   // Scale factor for the sprite
+        this.framesMax = framesMax;           // Maximum number of frames in the sprite sheet
+        this.framesCurrent = 0;               // Current frame being displayed
+        this.framesElapsed = 0;               // Frames elapsed since last frame change
+        this.frameHold = 0;                   // Number of updates to wait before switching frames     
+        this.offset =offset;
     }
-    // Method to draw 
+
+    // Method to draw the sprite on the canvas
     draw() {
-        c.drawImage(this.image ,this.position.x ,this.position.y);
+        c.drawImage(
+            this.image, 
+            this.framesCurrent * (this.image.width / this.framesMax), // Source X (frame offset)
+            0,                                                       // Source Y (top of the image)
+            this.image.width / this.framesMax,                       // Source width (width of one frame)
+            this.image.height,                                       // Source height (height of the image)
+            this.position.x-this.offset.x,                           // Destination X (position on canvas)
+            this.position.y-this.offset.y,                           // Destination Y (position on canvas)
+            (this.image.width / this.framesMax) * this.scale,        // Destination width (scaled)
+            this.image.height * this.scale                           // Destination height (scaled)
+        );
     }
 
-    // Method to update the sprite's position
+    animateFrames(){
+        this.framesElapsed++;
+        if (this.framesElapsed % this.frameHold === 0) { // Control animation speed
+            if (this.framesCurrent < this.framesMax - 1) { // If not at the last frame (-1 also cause of background stability)
+                this.framesCurrent++;                       // Move to the next frame
+            } else {
+                this.framesCurrent = 0;                     // Reset to the first frame
+            }
+        }
+    }
+
+    // Method to update the sprite's state
     update() {
-        // Draw 
+        // Draw the current frame of the sprite
         this.draw();
-        
-    }   
- }
+        // Update frame animation
+        this.animateFrames();
+    }
+}
 
+// Fighter class extends Sprite to inherit its properties and methods - Hoewever, methods from fighter will overwrite the ones from Sprite
+// Fighter class extends Sprite to inherit its properties and methods
+class Fighter extends Sprite {
+    constructor({ position, velocity, color = 'red', imageSrc, scale = 1, framesMax = 1 ,offset ={x:0,y:0}}) {
+        // Call the constructor of the Sprite class
+        super({ position, imageSrc, scale, framesMax, offset});
+        // Additional properties specific to Fighter
+        this.velocity = velocity;               // Velocity of the fighter
+        this.height = 150;                      // Height of the fighter
+        this.width = 50;                        // Width of the fighter
 
-class Fighter {
-    constructor({ position, velocity, color='red' , offset}) {
-        // Initialize sprite properties
-        this.position = position;
-        this.velocity = velocity;
-        this.height = 150;
-        this.width = 50;
-       
-        this.lastKey;
-        //its an object, a rectangle, and it has properties. The position in the constructor isnt dynamic -> update()
-        this.attackBox = {
+        this.lastKey;                           // Last key pressed for movement
+        this.attackBox = {                      // Attack box properties
             position: {
-               x: this.position.x,
-               y: this.position.x
+                x: this.position.x,
+                y: this.position.y
             },
             offset,
-            width:100,
-            height:50 
-        }
-        this.color=color; 
-        //by Default is false - tells if sprite is attacking
-        this.isAttacking; 
-        this.health = 100;
-        this.healthBarElement;
-
+            width: 100,
+            height: 50
+        };
+        this.color = color;                     // Color of the fighter
+        this.isAttacking = false;               // Whether the fighter is attacking
+        this.health = 100;                      // Health of the fighter
+        this.healthBarElement;                  // Element to display health bar
+        this.framesCurrent = 0;               // Current frame being displayed
+        this.framesElapsed = 0;               // Frames elapsed since last frame change
+        this.frameHold = 50;                   // Number of updates to wait before switching frames     
     }
-
-   
-    // Method to draw the sprite
-    draw() {
-        // Set fill color to red
-        c.fillStyle = this.color;
-        // Draw a filled rectangle at the sprite's position
-        c.fillRect(this.position.x, this.position.y, this.width, this.height);
-        if(this.isAttacking){
-        //Draw attackBox
-        this.attackBox.position.x = this.position.x + this.attackBox.offset.x ;
-        this.attackBox.position.y = this.position.y;
-        c.fillStyle = 'yellow';
-        c.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width, this.attackBox.height);
-        }
-
-    }
-
 
     handleGravity()  {
         // Move the sprite downwards
@@ -111,10 +122,13 @@ class Fighter {
     
 }
 
+
+
     // Method to update the sprite's position
     update() {
         // Draw the sprite
         this.draw();
+        this.animateFrames();
         // Handle gravity
         this.handleGravity();
         // Handle horizontal movement and canvas bounds
@@ -154,7 +168,4 @@ class Fighter {
     console.log(`Health bar width updated to ${newWidth}px`);
     console.log(`Health bar width updated to ${this.health}%`);
     }
-    
 }
-
-

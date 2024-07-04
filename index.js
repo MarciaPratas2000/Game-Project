@@ -45,19 +45,22 @@ const background = new Sprite({
     imageSrc:'./img/background.png'
 });
 // Create a player Fighter
-const player = new Fighter ({ 
+const player = new Fighter({ 
     position: {
         x: 0,
-        y: 0
+        y:0 
     },
     velocity: {
         x: 0,
         y: 0
     },
-    offset:{
-        x: 0,
-        y: 0
-    },
+   
+    imageSrc: './img/player/Pink_Monster_Idle_4.png',
+    scale:5,  
+    framesMax: 4,
+    offset:{ x: 0,
+        y: 50
+    }
 });
 
 // Create an enemy Fighter
@@ -70,11 +73,13 @@ const enemy = new Fighter ({
         x: 0,
         y: 0
     },
-    offset:{
-        x: -50,
-        y: 0
-    },
-    color:'blue'
+     
+    imageSrc: './img/enemy/Dude_Monster_Idle_4.png',
+    scale:5,  
+    framesMax: 4,
+    offset:{ x: -100,
+        y: 50
+    }
 });
 
 const keys = {

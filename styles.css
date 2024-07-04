@@ -8,6 +8,7 @@ body {
 canvas{
 border: 2px solid rgb(168, 156, 155);
 border-radius: 8px;
+
 }
 
 .container {
@@ -27,7 +28,7 @@ border-radius: 8px;
     max-width: 1024px;
     position: relative;
     margin: 0 auto;
-
+    text-align: center;
 }
 
 section {
@@ -35,10 +36,11 @@ section {
     position: absolute;
     right: 0;
     left: 0;
-    width: 100%;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     margin-top: 10px;
+   
+
 }
 .result{
     font-size: 70px;
@@ -75,7 +77,7 @@ section {
 
 .bar-fill-reverse {
     position: absolute;
-    background-color: rgb(199, 75, 37);
+    background-color: rgb(210, 171, 214);
     height: 100%;
     width: 100%;
     right: 0;
@@ -157,5 +159,5 @@ section {
 
 /* Customize player 2 health bar fill */
 #enemy-health-fill {
-    background-color: rgb(102, 96, 255);
+    background-color: rgb(132, 166, 209);
 }
