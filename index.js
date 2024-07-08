@@ -1,5 +1,3 @@
-
-
 const gameTextButton = document.getElementById('gameText');
 const gameInstructions = document.querySelector('.game-instructions');
 const gameSection = document.querySelector('.game-section');
@@ -17,7 +15,7 @@ gameTextButton.addEventListener('click', function() {
     }
 });
 
-const gravity = 0.7
+const gravity = 0.7;
 // Get the canvas element and its 2D drawing context
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
@@ -29,57 +27,77 @@ canvas.height = 576;
 c.fillStyle = 'black';
 c.fillRect(0, 0, canvas.width, canvas.height);
 
-//Note:
-// Arrow Functions: Arrow functions do not have their own 'this' context. 
-// Instead, they inherit the 'this' value from their enclosing lexical scope (the context in which they are defined). 
-// This behavior is particularly useful for maintaining the context of this in nested functions or when using callbacks.
-// Normal Functions: Normal functions have their own 'this' context, which is determined by how the function is called. 
-// The value of 'this' inside a normal function depends on the function's invocation context (e.g., if it's a method of an object, a standalone function call, etc.).
-
 // Create a background
 const background = new Sprite({
     position: {
         x: 0,
         y: 0
     },
-    imageSrc:'./img/background.png'
+    imageSrc: './img/background.png'
 });
+
 // Create a player Fighter
-const player = new Fighter({ 
-    position: {
-        x: 0,
-        y:0 
-    },
-    velocity: {
-        x: 0,
-        y: 0
-    },
-   
+const player = new Fighter({
+    position: { x: 0, y: 0 },
+    velocity: { x: 0, y: 0 },
     imageSrc: './img/player/Pink_Monster_Idle_4.png',
-    scale:5,  
-    framesMax: 4,
-    offset:{ x: 0,
-        y: 50
-    }
+    scale: 5,
+    offset: { x: 20, y: 50 },
+    sprites: {
+        idle: { 
+            imageSrc: './img/player/Pink_Monster_Idle_4.png', 
+            framesMax: 4,
+            frameHold: 30 // Adjust as needed
+        },
+        run: { 
+            imageSrc: './img/player/Pink_Monster_Run_6.png', 
+            framesMax: 6,
+            frameHold: 10 // Adjust as needed
+        },
+        jump: { 
+            imageSrc: './img/player/Pink_Monster_Jump_8.png', 
+            framesMax: 8,
+            frameHold: 10 // Adjust as needed
+        },
+        attack: { 
+            imageSrc: './img/player//Pink_Monster_Attack2_6.png', 
+            framesMax: 6,
+            frameHold: 10 // Adjust as needed
+        },
+    },
+    reverseAnimation: false // Set to false for reverse animation
 });
 
 // Create an enemy Fighter
-const enemy = new Fighter ({ 
-    position: {
-        x: 500,
-        y: 100
-    },
-    velocity: {
-        x: 0,
-        y: 0
-    },
-     
+const enemy = new Fighter({
+    position: { x: 900, y: 100 },
+    velocity: { x: 0, y: 0 },
     imageSrc: './img/enemy/Dude_Monster_Idle_4.png',
-    scale:5,  
-    framesMax: 4,
-    offset:{ x: -100,
-        y: 50
-    }
+    scale: 5,
+    offset: { x: 20, y: 50 },
+    sprites: {
+        idle: { 
+            imageSrc: './img/enemy/Dude_Monster_Idle_4.png', 
+            framesMax: 4,
+            frameHold: 30 // Adjust as needed
+        },
+        run: { 
+            imageSrc: './img/enemy/Dude_Monster_Run_6.png', 
+            framesMax: 6,
+            frameHold: 10 // Adjust as needed
+        },
+        jump: { 
+            imageSrc: './img/enemy/Dude_Monster_Jump_8.png', 
+            framesMax: 8,
+            frameHold: 10 // Adjust as needed
+        },
+        attack: { 
+            imageSrc: './img/enemy/Dude_Monster_Attack2_6.png', 
+            framesMax: 6,
+            frameHold: 10 // Adjust as needed
+        },
+    },
+    reverseAnimation: true // Set to true for reverse animation
 });
 
 const keys = {
@@ -97,15 +115,15 @@ const keys = {
     },
     ArrowRight: {
         pressed: false
-      },
+    },
     ArrowLeft: {
         pressed: false
-      }
+    }
 }
 
 function handleKeyDown(event) {
     switch (event.key) {
-        //player movements
+        // Player movements
         case 'd':
             keys.d.pressed = true;
             player.lastKey = 'd';
@@ -117,12 +135,12 @@ function handleKeyDown(event) {
         case 'w':
             keys.w.pressed = true;
             player.velocity.y = -20;
-        break; 
-        //space bar -activate attack
+            break; 
+        // Space bar - activate attack
         case ' ':
             player.attack();
             break;
-        //enemy movements  
+        // Enemy movements  
         case 'ArrowRight':
             keys.ArrowRight.pressed = true;
             enemy.lastKey = 'ArrowRight';
@@ -131,7 +149,6 @@ function handleKeyDown(event) {
             keys.ArrowLeft.pressed = true;
             enemy.lastKey = 'ArrowLeft';
             break;
-      
         case 'ArrowUp':
             keys.ArrowUp.pressed = true;
             enemy.velocity.y = -20;
@@ -150,88 +167,92 @@ function handleKeyUp(event) {
         case 'a':
             keys.a.pressed = false;
             break;
-
         case 'w':
             keys.w.pressed = false;
             break;
-
         case 'ArrowRight':
             keys.ArrowRight.pressed = false;
             break;
         case 'ArrowLeft':
             keys.ArrowLeft.pressed = false;
             break;
-        
         case 'ArrowUp':
             keys.ArrowUp.pressed = false;
             break;
-        }
     }
-// Usage: Start the timer with 60 seconds (adjust as needed)
-startTimer(30);
+}
 
+// Detect rectangle collision
+function handleRectangleCollision(rect1, rect2) {
+    return (
+        rect1.position.x + rect1.attackBox.width >= rect2.position.x &&
+        rect1.position.x <= rect2.position.x + rect2.attackBox.width &&
+        rect1.position.y + rect1.attackBox.height >= rect2.position.y &&
+        rect1.position.y <= rect2.position.y + rect2.attackBox.height
+    );
+}
+
+// Start the animation loop
 function animate() {
     window.requestAnimationFrame(animate);
-    // Clear the canvas
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Update player and enemy velocity based on keys
-     // Update player and enemy position based on velocity
-     background.update();
-     player.update();
-     enemy.update();
-     player.velocity.x = 0;
-     enemy.velocity.x = 0;
+    background.update();
+    player.update();
+    enemy.update();
 
-    if (keys.d.pressed && player.lastKey ==='d') {
+    player.velocity.x = 0;
+    enemy.velocity.x = 0;
+
+    // Default player sprite to idle
+    player.switchSprite('idle');
+    if (keys.d.pressed && player.lastKey === 'd') {
         player.velocity.x = 5;
-    } else if (keys.a.pressed && player.lastKey ==='a') {
+        player.switchSprite('run');
+    } else if (keys.a.pressed && player.lastKey === 'a') {
         player.velocity.x = -5;
+        player.switchSprite('run');
+    }
+    if (player.velocity.y < 0) { 
+        player.switchSprite('jump');
     }
 
+    // Default enemy sprite to idle
+    enemy.switchSprite('idle');
     if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
         enemy.velocity.x = 5;
+        enemy.switchSprite('run');
     } else if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
-        enemy.velocity.x = -5;
+        enemy.velocity.x = -5; 
+        enemy.switchSprite('run');
     }
-   //detect for collision
-   if (handleRectangleCollision(player,enemy) && player.isAttacking)
-    {  
- // The variable player.isAttacking is immediately set to false to prevent counting 
- //any additional attacks triggered by the space bar during the next 100 milliseconds.
- if (handleRectangleCollision(player, enemy) && player.isAttacking) {
-     // Disable further attacks for 100 milliseconds
-     player.isAttacking = false;
-     console.log('Player Attack ');
-     //Get the enemy health bar element
-     enemy.healthBarElement = document.querySelector('#enemy-health-fill');
-     enemy.updateHealthBar();
-     }
-       
- }
- 
- if (handleRectangleCollision(enemy,player) && enemy.isAttacking)
-     {  
-         enemy.isAttacking = false;
-         console.log('Enemy Attack ');
-    player.healthBarElement = document.querySelector('#player-health-fill');
-    // Update the player's health bar (e.g., decrease by 20%)
-    player.updateHealthBar();        
+    if (enemy.velocity.y < 0) { 
+        enemy.switchSprite('jump');
+    }
+
+    // Detect collision
+    if (handleRectangleCollision(player, enemy) && player.isAttacking) {
+        player.isAttacking = false;
+        console.log('Player Attack');
+        enemy.healthBarElement = document.querySelector('#enemy-health-fill');
+        enemy.updateHealthBar();
+    }
+    if (handleRectangleCollision(enemy, player) && enemy.isAttacking) {
+        enemy.isAttacking = false;
+        console.log('Enemy Attack');
+        player.healthBarElement = document.querySelector('#player-health-fill');
+        player.updateHealthBar();
+    }
+
+    if (player.health <= 1 || enemy.health <= 1) {
+        determine(player, enemy);
+    }
 }
-
-if (player.health <= 1 || enemy.health <= 1 )
-    determine(player,enemy);
-    }
-
-
-        // Get the computed style of the enemy health bar
-window.addEventListener('keydown', handleKeyDown);
-window.addEventListener('keyup', handleKeyUp);
 
 // Start the animation loop
 animate();
 
-
-
+window.addEventListener('keydown', handleKeyDown);
+window.addEventListener('keyup', handleKeyUp);
 
