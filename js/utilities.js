@@ -40,3 +40,4 @@ function startTimer(seconds) {
 
     decreaseTime(); // Start the initial countdown
 }
+startTimer(20);
