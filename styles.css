@@ -11,6 +11,7 @@ border-radius: 8px;
 
 }
 
+
 .container {
     position: relative;
     margin: 10px;
@@ -19,6 +20,7 @@ border-radius: 8px;
 }
 
 .game-section h1 {
+    font-family: monospace;
     position: relative;
     text-align: center;
     font-size: 20px;
@@ -44,12 +46,12 @@ section {
 }
 .result{
     font-size: 70px;
-    font-family:Georgia, 'Times New Roman', Times, serif;
+    font-family:monospace;
     position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: azure;
+    color: rgb(1, 1, 1);
     top: 0;
     left: 0;
     right: 0;
@@ -95,7 +97,7 @@ section {
 }
 
 .game-text {
-    background-color: #007bff;
+    background-color: #63a8a9;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -118,13 +120,13 @@ section {
 }
 
 .instructions h1 {
-    color: #007bff;
+    color: #9e5440;
     font-size: 24px;
     margin-bottom: 20px;
 }
 
 .instructions h2 {
-    color: #ff5733; /* Red for Player 1 */
+    color: #63a8a9; /* Red for Player 1 */
     font-size: 20px;
     margin-top: 30px;
 }
@@ -160,4 +162,26 @@ section {
 /* Customize player 2 health bar fill */
 #enemy-health-fill {
     background-color: rgb(132, 166, 209);
+}
+
+
+footer {
+    font-family:monospace ;
+    color: #070707; /* White text */
+    text-align: center; /* Centered text */
+    padding: 20px; /* Space around content */
+    font-size: 14px; /* Font size */
+    position: relative; /* Positioning */
+    bottom: 0; /* Stays at the bottom */
+    width: 90%; /* Full width */
+    text-align: center;
+}
+
+footer a {
+    color: #827a5a; /* Link color */
+    text-decoration: none; /* No underline */
+}
+
+footer a:hover {
+    text-decoration: underline; /* Underline on hover */
 }
